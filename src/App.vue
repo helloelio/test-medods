@@ -1,7 +1,8 @@
 <template>
   <div>
     <form @submit.prevent="checkForm" v-if="!formIsValid">
-      <div class="person-main-info">
+      <h2>Пациент</h2>
+      <div class="person-info">
         <div class="left-block">
           <label for="lastName"
             >Фамилия*
@@ -11,6 +12,12 @@
               v-model="person.lastName"
               :class="v$.person.lastName.$error ? 'error' : ''"
             />
+            <p
+              class="error-message"
+              v-show="v$.person.lastName.$error && v$.person.lastName.required"
+            >
+              Поле 'Фамилия' обязательно для заполнения
+            </p>
           </label>
           <label for="name"
             >Имя*
@@ -20,13 +27,17 @@
               v-model="person.name"
               :class="v$.person.name.$error ? 'error' : ''"
             />
+            <p
+              class="error-message"
+              v-show="v$.person.name.$error && v$.person.name.required"
+            >
+              Поле 'Имя' обязательно для заполнения
+            </p>
           </label>
-
           <label for="secondName"
             >Отчество
             <input id="secondName" type="text" v-model="person.secondName" />
           </label>
-
           <label for="birthday"
             >Дата рождения*
             <input
@@ -35,8 +46,13 @@
               v-model="person.birthday"
               :class="v$.person.birthday.$error ? 'error' : ''"
             />
+            <p
+              class="error-message"
+              v-show="v$.person.birthday.$error && v$.person.birthday.required"
+            >
+              Поле 'Дата рождения' обязательно для заполнения
+            </p>
           </label>
-
           <label for="sex" class="sex"
             >Пол
             <input id="sex" type="radio" value="Мужской" v-model="person.sex" />
@@ -44,7 +60,6 @@
             <input id="sex" type="radio" value="Женский" v-model="person.sex" />
             Жен.
           </label>
-
           <label for="phoneNumber"
             >Номер телефона*
             <input
@@ -53,6 +68,14 @@
               v-model="person.phoneNumber"
               :class="v$.person.phoneNumber.$error ? 'error' : ''"
             />
+            <p
+              class="error-message"
+              v-show="
+                v$.person.phoneNumber.$error && v$.person.phoneNumber.required
+              "
+            >
+              Поле 'Номер телефона' обязательно для заполнения
+            </p>
           </label>
         </div>
         <div class="right-block">
@@ -73,8 +96,15 @@
                 {{ item }}
               </option>
             </select>
+            <p
+              class="error-message"
+              v-show="
+                v$.person.clientGroup.$error && v$.person.clientGroup.required
+              "
+            >
+              Поле 'Группа клиентов' обязательно для заполнения
+            </p>
           </label>
-
           <label for="therapist"
             >Лечащий врач
             <select id="therapist" type="text" v-model="person.therapist">
@@ -98,50 +128,122 @@
           Не отправлять СМС
         </label>
       </div>
+      <h2>Адрес</h2>
+      <div class="adress-info">
+        <label for="index"
+          >Индекс
+          <input id="index" type="text" v-model="person.adress.index" />
+        </label>
+        <label for="country"
+          >Страна
+          <input id="country" type="text" v-model="person.adress.country" />
+        </label>
+        <label for="region"
+          >Регион
+          <input id="region" type="text" v-model="person.adress.region" />
+        </label>
+        <label for="city"
+          >Город*
+          <input
+            id="city"
+            type="text"
+            v-model="person.adress.city"
+            :class="v$.person.adress.city.$error ? 'error' : ''"
+          />
+          <p
+            class="error-message"
+            v-show="
+              v$.person.adress.city.$error && v$.person.adress.city.required
+            "
+          >
+            Поле 'Город' обязательно для заполнения
+          </p>
+        </label>
+        <label for="street"
+          >Улица
+          <input id="street" type="text" v-model="person.adress.street" />
+        </label>
+        <label for="houseNumber"
+          >Дом
+          <input
+            id="houseNumber"
+            type="text"
+            v-model="person.adress.houseNumber"
+          />
+        </label>
+      </div>
+      <h2>Документ</h2>
 
+      <div class="document-info">
+        <label for="document">
+          Тип документа*
+          <select
+            id="document"
+            type="text"
+            v-model="person.document.type"
+            :class="v$.person.document.type.$error ? 'error' : ''"
+          >
+            <option value="" disabled>Выберите документ:</option>
+            <option
+              v-for="(item, index) in documnetTypeSelect"
+              :key="index"
+              :value="item"
+            >
+              {{ item }}
+            </option>
+          </select>
+          <p
+            class="error-message"
+            v-show="
+              v$.person.document.type.$error && v$.person.document.type.required
+            "
+          >
+            Поле 'Тип документа' обязательно для заполнения
+          </p>
+        </label>
+        <div class="series-number">
+          <label for="series"
+            >Серия
+            <input id="series" type="text" v-model="person.document.series" />
+          </label>
+          <label for="documentNumber"
+            >Номер
+            <input
+              id="documentNumber"
+              type="text"
+              v-model="person.document.documentNumber"
+            />
+          </label>
+        </div>
+        <label for="issuedBy"
+          >Кем выдан
+          <input id="issuedBy" type="text" v-model="person.document.issuedBy" />
+        </label>
+        <label for="lastName"
+          >Дата выдачи*
+          <input
+            id="dateOfIssue"
+            type="date"
+            v-model="person.document.dateOfIssue"
+            :class="v$.person.document.dateOfIssue.$error ? 'error' : ''"
+          />
+          <p
+            class="error-message"
+            v-show="
+              v$.person.document.dateOfIssue.$error &&
+              v$.person.document.dateOfIssue.required
+            "
+          >
+            Поле 'Дата выдачи' обязательно для заполнения
+          </p>
+        </label>
+      </div>
       <button>Отправить</button>
     </form>
+
     <div v-else class="congratulations">
       Регистрация прошла успешно
       <div>{{ this.person }}</div>
-    </div>
-    <div class="error-messages">
-      <p
-        class="error-message"
-        v-show="v$.person.lastName.$error && v$.person.lastName.required"
-      >
-        Поле 'Фамилия' обязательно для заполнения
-      </p>
-      <p
-        class="error-message"
-        v-show="v$.person.name.$error && v$.person.name.required"
-      >
-        Поле 'Имя' обязательно для заполнения
-      </p>
-      <!-- <p
-        class="error-message"
-        v-show="v$.person.name.$invalid && v$.person.name.required"
-      >
-        Поле 'Имя' должно состоять из Русских букв
-      </p> -->
-      <p
-        class="error-message"
-        v-show="v$.person.birthday.$error && v$.person.birthday.required"
-      >
-        Поле 'Дата рождения' обязательно для заполнения
-      </p>
-      <p
-        class="error-message"
-        v-show="v$.person.phoneNumber.$error && v$.person.phoneNumber.required"
-      >
-        Поле 'Номер телефона' обязательно для заполнения
-      </p>
-      <p
-        class="error-message"
-        v-show="v$.person.clientGroup.$error && v$.person.clientGroup.required"
-      >
-        Поле 'Группа клиентов' обязательно для заполнения
-      </p>
     </div>
   </div>
 </template>
@@ -167,10 +269,30 @@ export default {
         clientGroup: [],
         therapist: '',
         dontSendMessage: false,
+        adress: {
+          index: '',
+          city: '',
+          street: '',
+          country: '',
+          region: '',
+          houseNumber: '',
+        },
+        document: {
+          type: '',
+          series: '',
+          documentNumber: '',
+          issuedBy: '',
+          dateOfIssue: '',
+        },
       },
       formIsValid: false,
       clientGroupSelect: ['VIP', 'Проблемные', 'ОМС'],
       therapistSelect: ['Иванов', 'Захаров', 'Чернышева'],
+      documnetTypeSelect: [
+        'Паспорт',
+        'Свидетельство о рождении',
+        'Вод.удостоверение',
+      ],
     };
   },
 
@@ -178,13 +300,13 @@ export default {
     person: {
       name: {
         required,
-        fioValidation(value) {
+        alpha(value) {
           return /^[А-ЯЁ][а-яё]*$/.test(value);
         },
       },
       lastName: {
         required,
-        fioValidation(value) {
+        alpha(value) {
           return /^[А-ЯЁ][а-яё]*$/.test(value);
         },
       },
@@ -201,6 +323,27 @@ export default {
       },
       clientGroup: {
         required,
+      },
+      adress: {
+        // index: {
+        //   indexValidation(value) {
+        //     return /[0-9]/.test(value);
+        //   },
+        // },
+        city: {
+          required,
+          alpha(value) {
+            return /^[А-ЯЁ][а-яё]*$/.test(value);
+          },
+        },
+      },
+      document: {
+        type: {
+          required,
+        },
+        dateOfIssue: {
+          required,
+        },
       },
     },
   },
@@ -219,18 +362,33 @@ export default {
 </script>
 
 <style lang="scss">
+* {
+  overflow-x: hidden;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
 }
-.invalid {
-  box-shadow: 0px 0px 1px 2px red;
+p {
+  margin: 5px 0;
 }
-.person-main-info {
+label {
+  display: grid;
+  text-align: left;
+  margin-bottom: 10px;
+}
+input,
+select {
+  padding: 5px;
+}
+select {
+  margin-bottom: 10px;
+}
+.person-info {
   max-width: 700px;
   margin: 0 auto;
   display: grid;
@@ -242,19 +400,25 @@ export default {
     align-items: center;
   }
 }
-label {
-  display: grid;
-  text-align: left;
-  margin-bottom: 10px;
+.adress-info {
+  max-width: 700px;
+  margin: 0 auto;
 }
-input,
-select {
-  padding: 5px;
+
+.document-info {
+  max-width: 700px;
+  margin: 0 auto;
+  .series-number {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+  }
 }
 .error-messages {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: -1000px;
+  animation: showError 15s;
 }
 .error-message {
   background-color: rgba(255, 0, 0, 0.7);
@@ -275,15 +439,27 @@ select {
 }
 @keyframes showError {
   0% {
-    opacity: 1;
+    right: 10px;
+  }
+  10% {
+    right: 10px;
+  }
+  20% {
+    right: 10px;
+  }
+  30% {
+    right: 10px;
+  }
+  40% {
+    right: 10px;
   }
   100% {
-    opacity: 0;
+    right: -1000px;
   }
 }
 
 @media (max-width: 500px) {
-  .person-main-info {
+  .person-info {
     grid-template-columns: 1fr;
   }
 }
