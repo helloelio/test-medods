@@ -48,9 +48,18 @@
             />
             <p
               class="error-message"
-              v-show="v$.person.birthday.$error && v$.person.birthday.required"
+              v-show="
+                v$.person.birthday.required.$invalid &&
+                v$.person.birthday.$error
+              "
             >
-              Поле 'Дата рождения' обязательно для заполнения
+              Поле 'Дата рождения' обязательно для заполнения. <br />
+            </p>
+            <p
+              class="error-message"
+              v-show="v$.person.birthday.$error && person.birthday"
+            >
+              Неккоректный формат даты.
             </p>
           </label>
           <label for="sex" class="sex"
@@ -219,7 +228,7 @@
           >Кем выдан
           <input id="issuedBy" type="text" v-model="person.document.issuedBy" />
         </label>
-        <label for="lastName"
+        <label for="dateOfIssue"
           >Дата выдачи*
           <input
             id="dateOfIssue"
@@ -230,11 +239,20 @@
           <p
             class="error-message"
             v-show="
-              v$.person.document.dateOfIssue.$error &&
-              v$.person.document.dateOfIssue.required
+              v$.person.document.dateOfIssue.required.$invalid &&
+              v$.person.document.dateOfIssue.$error
             "
           >
-            Поле 'Дата выдачи' обязательно для заполнения
+            Поле 'Дата выдачи' обязательно для заполнения. <br />
+          </p>
+          <p
+            class="error-message"
+            v-show="
+              v$.person.document.dateOfIssue.$error &&
+              person.document.dateOfIssue
+            "
+          >
+            Неккоректный формат даты.
           </p>
         </label>
       </div>
@@ -312,6 +330,11 @@ export default {
       },
       birthday: {
         required,
+        dateValidation(value) {
+          const date = new Date(value);
+          const now = new Date();
+          return date < now;
+        },
       },
       phoneNumber: {
         required,
@@ -325,11 +348,6 @@ export default {
         required,
       },
       adress: {
-        // index: {
-        //   indexValidation(value) {
-        //     return /[0-9]/.test(value);
-        //   },
-        // },
         city: {
           required,
           alpha(value) {
@@ -343,6 +361,11 @@ export default {
         },
         dateOfIssue: {
           required,
+          dateValidation(value) {
+            const date = new Date(value);
+            const now = new Date();
+            return date < now;
+          },
         },
       },
     },
