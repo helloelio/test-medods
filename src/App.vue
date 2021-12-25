@@ -80,10 +80,21 @@
             <p
               class="error-message"
               v-show="
-                v$.person.phoneNumber.$error && v$.person.phoneNumber.required
+                v$.person.phoneNumber.$error &&
+                v$.person.phoneNumber.required &&
+                person.phoneNumber.length < 3
               "
             >
               Поле 'Номер телефона' обязательно для заполнения
+            </p>
+            <p
+              class="error-message"
+              v-show="v$.person.phoneNumber.maxLength.$invalid"
+            >
+              Неккоректный формат номера телефона "{{
+                person.phoneNumber.length -
+                v$.person.phoneNumber.maxLength.$params.max
+              }}" лишняя цифра
             </p>
           </label>
         </div>
@@ -182,7 +193,6 @@
         </label>
       </div>
       <h2>Документ</h2>
-
       <div class="document-info">
         <label for="document">
           Тип документа*
@@ -256,7 +266,9 @@
           </p>
         </label>
       </div>
-      <button>Отправить</button>
+      <button :class="v$.$error ? 'error-button' : 'succeful-button'">
+        Отправить
+      </button>
     </form>
 
     <div v-else class="congratulations">
@@ -318,11 +330,13 @@ export default {
     person: {
       name: {
         required,
+        minLength: minLength(2),
         alpha(value) {
           return /^[А-ЯЁ][а-яё]*$/.test(value);
         },
       },
       lastName: {
+        minLength: minLength(2),
         required,
         alpha(value) {
           return /^[А-ЯЁ][а-яё]*$/.test(value);
@@ -350,6 +364,7 @@ export default {
       adress: {
         city: {
           required,
+          minLength: minLength(3),
           alpha(value) {
             return /^[А-ЯЁ][а-яё]*$/.test(value);
           },
@@ -450,6 +465,20 @@ select {
   padding: 5px;
   border-radius: 4px;
   transition: 2s ease;
+}
+button {
+  padding: 10px 40px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+.succeful-button {
+  background-color: green;
+}
+.error-button {
+  background-color: red;
 }
 .error {
   border: 3px solid red;
